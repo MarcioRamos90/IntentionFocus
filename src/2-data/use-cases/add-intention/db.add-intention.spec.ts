@@ -1,6 +1,13 @@
 import { DbAddIntention } from './db-add-intention'
 import { AddIntentionModel, IntentionModel, AddIntentionRepository } from './protocols'
 
+const makeFakeIntentionData = (): AddIntentionModel => {
+  return {
+    title: 'any_title',
+    summary: 'any_title',
+  }
+}
+
 const makeAddIntentionRepositoryStub = () => {
   class addIntentionRepository implements AddIntentionRepository {
     async add (intention: AddIntentionModel): Promise<IntentionModel> {
@@ -32,16 +39,8 @@ const makeSut = (): makeSutTypes => {
 
 describe('DBAddIntention', () => {
   it('Should return an intention id success', async () => {
-    const dataInput: AddIntentionModel = {
-      title: 'any_title',
-      summary: 'any_title',
-      text: 'any_title',
-      categories: 'any_title',
-      currentWork: 'any_title',
-    }
-
     const { sut } = makeSut()
-    const response = await sut.add(dataInput)
+    const response = await sut.add(makeFakeIntentionData())
 
     expect(response).toEqual({
       id: 'valid_id',
@@ -57,11 +56,7 @@ describe('DBAddIntention', () => {
     const { sut, addIntentionRepositoryStub } = makeSut()
     jest.spyOn(addIntentionRepositoryStub, 'add')
       .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const dataInput: AddIntentionModel = {
-      title: 'any_title',
-      summary: 'any_title',
-    }
-    const promise = sut.add(dataInput)
+    const promise = sut.add(makeFakeIntentionData())
     await expect(promise).rejects.toThrow()
   })
 })
