@@ -4,7 +4,7 @@ import { AddIntentionModel, IntentionModel, AddIntentionRepository } from './pro
 const makeFakeIntentionData = (): AddIntentionModel => {
   return {
     title: 'any_title',
-    summary: 'any_title',
+    summary: 'any_title'
   }
 }
 
@@ -17,7 +17,7 @@ const makeAddIntentionRepositoryStub = () => {
         summary: 'valid_title',
         text: 'valid_title',
         categories: 'valid_title',
-        currentWork: 'valid_title',
+        currentWork: 'valid_title'
       }
     }
   }
@@ -30,7 +30,7 @@ interface makeSutTypes {
 
 const makeSut = (): makeSutTypes => {
   const addIntentionRepositoryStub = makeAddIntentionRepositoryStub()
-  const sut =  new DbAddIntention(addIntentionRepositoryStub)
+  const sut = new DbAddIntention(addIntentionRepositoryStub)
   return {
     sut,
     addIntentionRepositoryStub
@@ -48,7 +48,7 @@ describe('DBAddIntention', () => {
       summary: 'valid_title',
       text: 'valid_title',
       categories: 'valid_title',
-      currentWork: 'valid_title',
+      currentWork: 'valid_title'
     })
   })
 

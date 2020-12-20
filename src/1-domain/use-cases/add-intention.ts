@@ -1,4 +1,4 @@
-import { IntentionModel } from '../models/intention';
+import { IntentionModel } from '../models/intention'
 
 export interface AddIntentionModel {
   title: string,
