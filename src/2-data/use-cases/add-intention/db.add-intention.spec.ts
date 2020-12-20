@@ -1,7 +1,7 @@
 import { DbAddIntention } from './db-add-intention'
 import { AddIntentionModel, IntentionModel, AddIntentionRepository } from './protocols'
 
-const makeAddIntentionRepository = () => {
+const makeAddIntentionRepositoryStub = () => {
   class addIntentionRepository implements AddIntentionRepository {
     async add (intention: AddIntentionModel): Promise<IntentionModel> {
       return {
@@ -16,13 +16,22 @@ const makeAddIntentionRepository = () => {
   }
   return new addIntentionRepository()
 }
+interface makeSutTypes {
+  sut: DbAddIntention
+  addIntentionRepositoryStub: AddIntentionRepository
+}
 
-const makeSut = (): DbAddIntention => {
-  return new DbAddIntention(makeAddIntentionRepository())
+const makeSut = (): makeSutTypes => {
+  const addIntentionRepositoryStub = makeAddIntentionRepositoryStub()
+  const sut =  new DbAddIntention(addIntentionRepositoryStub)
+  return {
+    sut,
+    addIntentionRepositoryStub
+  }
 }
 
 describe('DBAddIntention', () => {
-  test('Should return an intention id success', async () => {
+  it('Should return an intention id success', async () => {
     const dataInput: AddIntentionModel = {
       title: 'any_title',
       summary: 'any_title',
@@ -31,8 +40,8 @@ describe('DBAddIntention', () => {
       currentWork: 'any_title',
     }
 
-    const dbAddIntention = makeSut()
-    const response = await dbAddIntention.add(dataInput)
+    const { sut } = makeSut()
+    const response = await sut.add(dataInput)
 
     expect(response).toEqual({
       id: 'valid_id',
@@ -42,5 +51,17 @@ describe('DBAddIntention', () => {
       categories: 'valid_title',
       currentWork: 'valid_title',
     })
+  })
+
+  it('Should throw if AddIntentionRepository throws', async () => {
+    const { sut, addIntentionRepositoryStub } = makeSut()
+    jest.spyOn(addIntentionRepositoryStub, 'add')
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const dataInput: AddIntentionModel = {
+      title: 'any_title',
+      summary: 'any_title',
+    }
+    const promise = sut.add(dataInput)
+    await expect(promise).rejects.toThrow()
   })
 })
