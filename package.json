@@ -1,10 +1,9 @@
 {
-  "name": "back",
+  "name": "intentionFocus",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node tes.ts",
     "test": "jest"
   },
   "devDependencies": {
